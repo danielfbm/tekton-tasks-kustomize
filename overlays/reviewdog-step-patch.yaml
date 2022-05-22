@@ -1,0 +1,49 @@
+# parameters
+- op: add
+  path: /spec/params/-
+  value:
+    name: report-file
+    default: reportfile
+    description: Report file with errors
+- op: add
+  path: /spec/params/-
+  value:
+    name: format
+    default: golint
+    description: Format of error input from the task
+- op: add
+  path: /spec/params/-
+  value:
+    name: reporter
+    default: local
+    description: Reporter type for reviewdog https://github.com/reviewdog/reviewdog#reporters
+- op: add
+  path: /spec/params/-
+  value:
+    name: diff
+    default: git diff FETCH_HEAD
+    description: Diff command https://github.com/reviewdog/reviewdog#reporters
+
+# workspaces
+- op: add
+  path: /spec/workspaces/-
+  value:
+    name: token
+    description: |
+      Workspace which contains a token file for Github Pull Request comments. Must have a token file with the Github API access token
+
+# steps
+- op: add
+  path: /spec/steps/-
+  value:
+    name: reviewdog-report
+    image: golangci/golangci-lint:v1.31-alpine
+    # both have the same workspace name
+    workingDir: $(workspaces.source.path)
+    script: |
+      #!/bin/sh
+
+      set -ue
+      wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+      export REVIEWDOG_GITHUB_API_TOKEN=$(cat $(workspaces.token.path)/token)
+      cat $(params.reportfile) | reviewdog -f=$(params.format) -diff="$(params.diff)"

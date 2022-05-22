@@ -1,0 +1,17 @@
+bases:
+- ../tasks
+
+nameSuffix: -review
+
+patches:
+- path: ./reviewdog-step-patch.yaml
+  target:
+    kind: Task
+- path: ./golangci-lint-patch.yaml
+  target:
+    kind: Task
+    name: golangci-lint
+- path: ./golint-patch.yaml
+  target:
+    kind: Task
+    name: golang-test

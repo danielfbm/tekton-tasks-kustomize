@@ -1,0 +1,3 @@
+resources:
+- golang-test.yaml
+- golangci-lint.yaml

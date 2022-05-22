@@ -1,0 +1,8 @@
+- op: replace
+  path: /spec/params/11/default
+  value: golangci-lint
+
+- op: replace
+  path: /spec/steps/0/script
+  value: |
+    golangci-lint run $(params.flags) > $(params.report-file)
